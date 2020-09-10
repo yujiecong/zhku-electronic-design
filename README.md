@@ -14,6 +14,15 @@ __电子181余杰聪__
 __电子181余杰聪__
 
 ## Content
+### 0.熟悉常用的头文件
+```
+#include<stdio.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<string.h>
+#include<linux/input.h>
+```
 ### 1.学习使用文件操作写入屏幕(screen.c)
  * /dev/fb0是屏幕文件，可以写入数据操控显示
  * 一个像素是由ARGB格式组成，所以要写入32个字节，在最后write时记得×4
