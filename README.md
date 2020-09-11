@@ -14,13 +14,9 @@ __电子181余杰聪__
 __电子181余杰聪__
 
 ## Content
-### 0.熟悉常用的头文件
+### 0.写在前头的一些心得
 ```
-#include<stdio.h>
-#include<sys/types.h>
-#include<sys/stat.h>
-
-#include<string.h>
+#include<math.>//在arm-linux-gcc时要加上-lm参数才能通过
 
 ```
 ### 1.学习使用文件操作写入屏幕(screen.c)
