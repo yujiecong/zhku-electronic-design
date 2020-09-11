@@ -16,7 +16,7 @@ __电子181余杰聪__
 ## Content
 ### 0.写在前头的一些心得
 ```
-#include<math.>//在arm-linux-gcc时要加上-lm参数才能通过
+#include<math.h>//在arm-linux-gcc时要加上-lm参数才能通过
 
 ```
 ### 1.学习使用文件操作写入屏幕(screen.c)
