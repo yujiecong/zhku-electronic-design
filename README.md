@@ -21,16 +21,20 @@ __电子181余杰聪__
 #include<sys/stat.h>
 
 #include<string.h>
-#include<linux/input.h>
+
 ```
 ### 1.学习使用文件操作写入屏幕(screen.c)
  * /dev/fb0是屏幕文件，可以写入数据操控显示
  * 一个像素是由ARGB格式组成，所以要写入32个字节，在最后write时记得×4
  * 常用头文件
-```
-#include<fcntl.h>//open close
-#include<unistd.h>// write
-```
+ ```
+  #include<fcntl.h>//open close
+  #include<unistd.h>// write
+  #include<sys/mman.h>//mmap munmap
+ ```
+ * _mmap只是在虚拟内存分配了地址空间，只有在第一次访问虚拟内存的时候才分配物理内存。更多信息请[click here](https://www.jianshu.com/p/755338d11865)_
+ * _总而言之，常规文件操作需要从磁盘到页缓存再到用户主存的两次数据拷贝。而mmap操控文件，只需要从磁盘到用户主存的一次数据拷贝过程。说白了，mmap的关键点是实现了用户空间和内核空间的数据直接交互而省去了空间不同数据不通的繁琐过程。因此mmap效率更高。[click here](https://blog.csdn.net/qq_33611327/article/details/81738195)_
+ 
 ### 2.学习操控触摸板
  * 输入设备事件类型常用宏
  ```
@@ -47,4 +51,8 @@ __电子181余杰聪__
         EV_PWR 0x16     电源
         EV_FF_STATUS    状态
         */
+ ```
+ * 常用头文件
+ ```
+ #include<linux/input.h>
  ```
