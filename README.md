@@ -90,3 +90,12 @@ __电子181余杰聪__
  ```
  #include<linux/input.h>
  ```
+### 3.读取bmp图片
+ * [1.bmp简单的介绍](https://blog.csdn.net/nicholas_duan/article/details/90717599)
+![img](week1/day3/aHR0cHM6Ly9pbWFnZXMuY25ibG9ncy5jb20vY25ibG9nc19jb20vamFzb25feWFvL2JtcF8zLnBuZw.png)
+__图文件从文件头开始偏移54个字节就是位图数据了__
+_所以我们需要首先读取54个字节来获取相关的详细数据包括高度和宽度,再读取bmp的像素数据_
+* 2.bmp格式转换
+bmp中一个像素是元祖(B,G,R)组成的
+
+
