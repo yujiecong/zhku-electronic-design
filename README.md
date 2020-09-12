@@ -17,6 +17,7 @@ __电子181余杰聪__
 ### 0.写在前头的一些心得
 ```
 #include<math.h>//在arm-linux-gcc时要加上-lm参数才能通过
+插入优盘后来到/mnt/udisk查看数据，若没有，需要mount挂载但我暂时不知道怎么解决这个问题。
 ```
 ### 1.学习使用文件操作写入屏幕(screen.c)
  * /dev/fb0是屏幕文件，可以写入数据操控显示
@@ -92,10 +93,12 @@ __电子181余杰聪__
  ```
 ### 3.读取bmp图片
  * __只能读取800*480分辨率的图片，否则就会出现segmentation fault！！__
-[1.bmp简单的介绍](https://blog.csdn.net/nicholas_duan/article/details/90717599)
-***
+ 
+ [1.bmp简单的介绍](https://blog.csdn.net/nicholas_duan/article/details/90717599)
 ![img](week1/day3/aHR0cHM6Ly9pbWFnZXMuY25ibG9ncy5jb20vY25ibG9nc19jb20vamFzb25feWFvL2JtcF8zLnBuZw.png)
+
 __图文件从文件头开始偏移54个字节就是位图数据了__
+
 ```
 //bmpfd信息
 int bmpfd=open("mn.bmp",O_RDONLY);
@@ -104,6 +107,7 @@ unsigned char bmpHead[54]={'0'};
 read(bmpfd,bmpHead,sizeof(bmpHead));
 ```
 _所以我们需要首先读取54个字节来获取相关的详细数据包括高度和宽度,再读取bmp的像素数据，分别是宽度为18到22和22到26这对应的4个字节储存宽和高_
+_这也是强制转换的一种用法，将char类型转成int时会强制读4个字节的数据即可_
 ![img](week1/day3/获取图片的长度和宽度.png)
 ```     
 int bmpHeight=*((int *)&bmpHead[22]);
