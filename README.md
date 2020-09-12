@@ -91,11 +91,64 @@ __电子181余杰聪__
  #include<linux/input.h>
  ```
 ### 3.读取bmp图片
- * [1.bmp简单的介绍](https://blog.csdn.net/nicholas_duan/article/details/90717599)
+ * __只能读取800*480分辨率的图片，否则就会出现segmentation fault！！__
+[1.bmp简单的介绍](https://blog.csdn.net/nicholas_duan/article/details/90717599)
+***
 ![img](week1/day3/aHR0cHM6Ly9pbWFnZXMuY25ibG9ncy5jb20vY25ibG9nc19jb20vamFzb25feWFvL2JtcF8zLnBuZw.png)
 __图文件从文件头开始偏移54个字节就是位图数据了__
-_所以我们需要首先读取54个字节来获取相关的详细数据包括高度和宽度,再读取bmp的像素数据_
+```
+//bmpfd信息
+int bmpfd=open("mn.bmp",O_RDONLY);
+//读取bmp头部信息
+unsigned char bmpHead[54]={'0'};
+read(bmpfd,bmpHead,sizeof(bmpHead));
+```
+_所以我们需要首先读取54个字节来获取相关的详细数据包括高度和宽度,再读取bmp的像素数据，分别是宽度为18到22和22到26这对应的4个字节储存宽和高_
+![img](week1/day3/获取图片的长度和宽度.png)
+```     
+int bmpHeight=*((int *)&bmpHead[22]);
+int bmpWidth=*((int *)&bmpHead[18]);
+printf("bmpHeight=%d,bmpWidth=%d \n",bmpHeight,bmpWidth);
+```
+_声明bmp像素数据数组，以及我们对应的屏幕像素数组_
+```
+//屏幕像素信息
+int screenPixels[bmpHeight][bmpWidth];
+//只能读取480*800的bmp图片！
+char bmpPixels[WIDTH*HEIGHT*3];
+//读取bmp像素数据
+read(bmpfd,bmpPixels,sizeof(bmpPixels));
+```
 * 2.bmp格式转换
-bmp中一个像素是元祖(B,G,R)组成的
+_bmp中一个像素是元祖(B,G,R)组成的,而开发板的像素是由(A,R,G,B)组成的，这里有一种算法能够转换_
+_由于R,G,B,A都是1字节数据，我们用char类型接收它，后来再用int类型转换到4字节_
+```
+unsigned char r,g,b,a,*bmpPixelsPointer=bmpPixels;
+unsigned int color=0;
+unsigned int x=0,y=0;
+```
+_这里比较复杂，但其实不难理解，利用了一些位操作和左移的结合比较巧妙，但很难想出来_
+![img](week1/day3/像素点数据合成.png)
 
-
+大意就是将(B,G,R)各个像素元素提取出来然后通过左移让他们分别增大0位，8位，16位，A就左移24位。再根据或操作1与0得1得到最后合成的（A,R,G,B）值
+```
+        for(y=0;y<bmpHeight;y++)
+        {
+                for(x=0;x<bmpWidth;x++){
+                        b=*bmpPixelsPointer++;
+                        g=*bmpPixelsPointer++;
+                        r=*bmpPixelsPointer++;
+                        a=0;
+                        color=a<<24 |r<<16|g<<8|b;
+                        screenPixels[y][x]=color;
+                        *(screenMap+y*800+x)=screenPixels[y][x];
+                }
+        };
+```
+* 3.end
+__最后别忘记关掉文件释放内存哦__
+```
+        close(screen);
+        close(bmpfd);
+        munmap(screenMap,HEIGHT*WIDTH*4);
+```
