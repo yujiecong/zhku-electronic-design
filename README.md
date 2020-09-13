@@ -160,8 +160,10 @@ __最后别忘记关掉文件释放内存哦__
 _这也是挺简单的思路，将show_bmp封装成一个函数，再传入path即可_
 _不过bmp占的内存太大了，800*480就要1M左右，实现一个gif要70M就离谱_
 ![img](week1/day3/TIM截图20200913230306.png)
+***
 __动图是这样的__
 ![img](week1/day3/7-1Z520115453.gif)
+***
 __[C语言里整数转字符串比较麻烦，自己写的话估计就要好久都弄不出来，所以百度哈哈，这是一个不难也不简单的算法](https://blog.csdn.net/nanfeibuyi/article/details/80811498)__
 ```
 char* Int2String(int num,char *str)//10进制 
@@ -200,7 +202,15 @@ char* Int2String(int num,char *str)//10进制
     return str;//返回转换后的值 
 }
 ```
+主要逻辑是这样的
 ```
+    //IMG00000.bmp
+    
+    char path[]="IMG00000.bmp";
+    int index,j,k;
+    char a[1],b[1];
+    int screen=open("/dev/fb0",O_RDWR);
+    int *screenMap=mmap(NULL,HEIGHT*WIDTH*4,PROT_READ | PROT_WRITE,MAP_SHARED,screen,0);
     while (1){
         for(index=0;index<8;index++){
             for(j=0;j<10;j++)
