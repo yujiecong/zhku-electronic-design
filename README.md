@@ -156,7 +156,7 @@ __最后别忘记关掉文件释放内存哦__
         close(bmpfd);
         munmap(screenMap,HEIGHT*WIDTH*4);
 ```
-* 4.动图bmp实现
+* 4.动图bmp实现(gif.c)__(补充)__
 _这也是挺简单的思路，将show_bmp封装成一个函数，再传入path即可_
 _不过bmp占的内存太大了，800*480就要1M左右，实现一个gif要70M就离谱_
 ![img](week1/day3/TIM截图20200913230306.png)
