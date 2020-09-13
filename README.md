@@ -6,7 +6,10 @@
 __嗯。。有个女老师挺好看的！！好喜欢!!__
 
 ## Requirement
-我用的是vscode加老师发的环境，等以后有机会想自己配置。。
+> 我用的是vscode加老师发的环境，等以后有机会想自己配置。。
+* arm-none-linux-gnueabi-4.5.1
+* ubuntu-12.04
+
 
 ## Contributor
 __电子181余杰聪__
