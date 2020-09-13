@@ -70,7 +70,7 @@ __电子181余杰聪__
  
  > _[总而言之，常规文件操作需要从磁盘到页缓存再到用户主存的两次数据拷贝。而mmap操控文件，只需要从磁盘到用户主存的一次数据拷贝过程。说白了，mmap的关键点是实现了用户空间和内核空间的数据直接交互而省去了空间不同数据不通的繁琐过程。因此mmap效率更高](https://blog.csdn.net/qq_33611327/article/details/81738195)_
  
-### 2.学习操控触摸板(input.c)
+### 2.学习操控触摸板(input.c)(待定)
  * 输入设备事件类型常用宏
  ```
          /*
@@ -155,4 +155,68 @@ __最后别忘记关掉文件释放内存哦__
         close(screen);
         close(bmpfd);
         munmap(screenMap,HEIGHT*WIDTH*4);
+```
+* 4.动图bmp实现
+_这也是挺简单的思路，将show_bmp封装成一个函数，再传入path即可_
+_不过bmp占的内存太大了，800*480就要1M左右，实现一个gif要70M就离谱_
+![img](week1/day3/TIM截图20200913230306.png)
+__动图是这样的__
+![img](week1/day3/7-1Z520115453.gif)
+__[C语言里整数转字符串比较麻烦，自己写的话估计就要好久都弄不出来，所以百度哈哈，这是一个不难也不简单的算法](https://blog.csdn.net/nanfeibuyi/article/details/80811498)__
+```
+char* Int2String(int num,char *str)//10进制 
+{
+    int i = 0;//指示填充str 
+    if(num<0)//如果num为负数，将num变正 
+    {
+        num = -num;
+        str[i++] = '-';
+    } 
+    //转换 
+    do
+    {
+        str[i++] = num%10+48;//取num最低位 字符0~9的ASCII码是48~57；简单来说数字0+48=48，ASCII码对应字符'0' 
+        num /= 10;//去掉最低位    
+    }while(num);//num不为0继续循环
+    
+    str[i] = '\0';
+    
+    //确定开始调整的位置 
+    int j = 0;
+    if(str[0]=='-')//如果有负号，负号不用调整 
+    {
+        j = 1;//从第二位开始调整 
+        ++i;//由于有负号，所以交换的对称轴也要后移1位 
+    }
+    //对称交换 
+    for(;j<i/2;j++)
+    {
+        //对称交换两端的值 其实就是省下中间变量交换a+b的值：a=a+b;b=a-b;a=a-b; 
+        str[j] = str[j] + str[i-1-j];
+        str[i-1-j] = str[j] - str[i-1-j];
+        str[j] = str[j] - str[i-1-j];
+    } 
+    
+    return str;//返回转换后的值 
+}
+```
+```
+    while (1){
+        for(index=0;index<8;index++){
+            for(j=0;j<10;j++)
+            {
+                if(index==7 && j==6){
+                    break;
+                }
+                path[6]=*Int2String(index,a);
+                path[7]=*Int2String(j,b);
+                //printf("path=%s\n",path);
+                show(path,screen,screenMap);
+                //赋值
+                delay(1);
+                
+            }
+
+        }
+    }
 ```
