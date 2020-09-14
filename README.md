@@ -95,7 +95,7 @@ __电子181余杰聪__
  #include<linux/input.h>
  ```
 ### 3.读取bmp图片(showbmp.c)
- * __只能读取800*480分辨率的图片，否则就会出现segmentation fault！！__
+ * __只能读取<800*480分辨率的图片，否则就会出现segmentation fault！！因为是数组越界了__
  
  [1.bmp简单的介绍](https://blog.csdn.net/nicholas_duan/article/details/90717599)
 ![img](week1/day3/aHR0cHM6Ly9pbWFnZXMuY25ibG9ncy5jb20vY25ibG9nc19jb20vamFzb25feWFvL2JtcF8zLnBuZw.png)
@@ -168,7 +168,7 @@ __动图是这样的__
 ***
 ![img](week1/day3/7-1Z520115453.gif)
 
-__[C语言里整数转字符串比较麻烦，自己写的话估计就要好久都弄不出来，所以百度哈哈，这是一个不难也不简单的算法](https://blog.csdn.net/nanfeibuyi/article/details/80811498)__
+__[C语言里整数转字符串比较麻烦，自己写的话估计就要好久，所以百度哈哈，这是一个不难也不简单的算法](https://blog.csdn.net/nanfeibuyi/article/details/80811498)__
 ```
 char* Int2String(int num,char *str)//10进制 
 {
