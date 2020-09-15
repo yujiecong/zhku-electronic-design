@@ -17,9 +17,13 @@ __电子181余杰聪__
 __电子181余杰聪__
 
 ## Content
+
+## 第一周
 ### 0.写在前头的一些心得
 ```
 #include<math.h>//在arm-linux-gcc时要加上-lm参数才能通过
+#include<pthread.h>要加 -phread参数
+
 插入优盘后来到/mnt/udisk查看数据，若没有，需要mount挂载但我暂时不知道怎么解决这个问题。
 ```
 ### 1.学习使用文件操作写入屏幕(screen.c)
@@ -73,28 +77,7 @@ __电子181余杰聪__
  
  > _[总而言之，常规文件操作需要从磁盘到页缓存再到用户主存的两次数据拷贝。而mmap操控文件，只需要从磁盘到用户主存的一次数据拷贝过程。说白了，mmap的关键点是实现了用户空间和内核空间的数据直接交互而省去了空间不同数据不通的繁琐过程。因此mmap效率更高](https://blog.csdn.net/qq_33611327/article/details/81738195)_
  
-### 2.学习操控触摸板(input.c)(待定)
- * 输入设备事件类型常用宏
- ```
-         /*
-        EV_SYN 0x00     同步事件
-        EV_KEY 0x01     按键事件
-        EV_REL 0x02     相对坐标
-        EV_ABS 0x03     绝对坐标
-        EV_MSC 0x04     其它
-        EV_LED 0x11     LED
-        EV_SND 0x12     声音
-        EV_REP 0x14     连击
-        EV_FF  0x15     力反馈 
-        EV_PWR 0x16     电源
-        EV_FF_STATUS    状态
-        */
- ```
- * 常用头文件
- ```
- #include<linux/input.h>
- ```
-### 3.读取bmp图片(showbmp.c)
+### 2.读取bmp图片(showbmp.c)
  * __只能读取<800*480分辨率的图片，否则就会出现segmentation fault！！因为是数组越界了__
  
  [1.bmp简单的介绍](https://blog.csdn.net/nicholas_duan/article/details/90717599)
@@ -189,7 +172,7 @@ _简单一点的做法是这样的，通过对ASCII的巧妙运用以及C语言�
 
 __[C语言里整数转字符串比较麻烦，自己写的话估计就要好久，所以百度哈哈，这是一个不难也不简单的算法](https://blog.csdn.net/nanfeibuyi/article/details/80811498)__  
 
-主要逻辑是这样的,__但是不推荐使用这种方法,这里只是稍微介绍一下有这种方式处理！！（gif.c）__
+主要逻辑是这样的,__但是不推荐使用这种方法,这里只是稍微介绍一下有这种方式处理！！详细请去看（gif.c）__
 ```
     char path[]="IMG00000.bmp";
     int index,j,k;
@@ -213,4 +196,27 @@ __[C语言里整数转字符串比较麻烦，自己写的话估计就要好久�
         }
     }
 ```
-
+## 第二周
+### 0.线程调用
+pass
+### 1.学习操控触摸板(input.c)(待定)
+ * 输入设备事件类型常用宏
+ ```
+         /*
+        EV_SYN 0x00     同步事件
+        EV_KEY 0x01     按键事件
+        EV_REL 0x02     相对坐标
+        EV_ABS 0x03     绝对坐标
+        EV_MSC 0x04     其它
+        EV_LED 0x11     LED
+        EV_SND 0x12     声音
+        EV_REP 0x14     连击
+        EV_FF  0x15     力反馈 
+        EV_PWR 0x16     电源
+        EV_FF_STATUS    状态
+        */
+ ```
+ * 常用头文件
+ ```
+ #include<linux/input.h>
+ ```
