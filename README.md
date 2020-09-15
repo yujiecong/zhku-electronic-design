@@ -217,9 +217,36 @@ __[C语言里整数转字符串比较麻烦，自己写的话估计就要好久�
 * 3. 入口函数参数 *arg : start_routine()函数有一个参数，这个参数就是pthread_create的最后一个参数arg。这种设计可以在线程创建之前就帮它准备好一些专有数据，最典型的用法就是使用C++编程时的this指针。start_routine()有一个返回值，这个返回值可以通过pthread_join()接口获得。 
 * 4. 线程属性 attr： pthread_create()接口的第二个参数用于设置线程的属性。这个参数是可选的，当不需要修改线程的默认属性时，给它传递NULL就行。具体线程有那些属性，我们后面再做介绍。
 
+> 这里有一个简单的例子  
+```
+void* thread( void *arg )  
+{  
+    printf( "This is a thread and arg = %d.\n", *(int*)arg);  
+    *(int*)arg = 0;  
+    return arg;  
+}  
+int main( int argc, char *argv[] )  
+{  
+    pthread_t th;  
+    int ret;  
+    int arg = 10;  
+    int *thread_ret = NULL;  
+    ret = pthread_create( &th, NULL, thread, &arg );  
+    if( ret != 0 ){  
+        printf( "Create thread error!\n");  
+        return -1;  
+    }  
+    printf( "This is the main process.\n" );  
+    pthread_join( th, (void**)&thread_ret );  
+    printf( "thread_ret = %d.\n", *thread_ret );  
+    return 0;  
+```
+#### 2,0.2 (待定)
+
+
 
 ### 2,1.学习操控触摸板(input.c)(待定)
-#### 2.1.0 输入设备事件类型常用宏
+#### 2,1.0 输入设备事件类型常用宏
  ```
          /*
         EV_SYN 0x00     同步事件
@@ -235,7 +262,87 @@ __[C语言里整数转字符串比较麻烦，自己写的话估计就要好久�
         EV_FF_STATUS    状态
         */
  ```
- * 常用头文件
+ __code：
+事件的代码.
+如果事件的类型代码是EV_KEY,该代码code为设备键盘代码.
+代码植0~127为键盘上的按键代码,0x110~0x116 为鼠标上按键代码,
+其中0x110(BTN_ LEFT)为鼠标左键,
+0x111(BTN_RIGHT)为鼠标右键,
+0x112(BTN_ MIDDLE)为鼠标中键.
+其它代码含义请参看include/linux/input.h文件. 
+如果事件的类型代码是EV_REL,code值表示轨迹的类型.
+如指示鼠标的X轴方向REL_X(代码为0x00),
+指示鼠标的Y轴方向REL_Y(代码 为0x01),
+指示鼠标中轮子方向REL_WHEEL(代码为0x08).__
+
+__type: 
+EV_KEY,键盘
+EV_REL,相对坐标
+EV_ABS,绝对坐标 __
+  
+ #### 2,1.1 常用头文件
  ```
  #include<linux/input.h>
  ```
+ #### 2,1.2 读取触摸屏
+ 这里由input_event定义了一个struct类型，它的原型是这样的  
+ 
+```
+struct input_event {
+
+struct timeval time; //按键时间
+
+__u16 type; //类型，在见2,1.0有定义
+
+__u16 code; //要模拟成什么按键
+
+__s32 value;//是按下还是释放
+
+};
+```
+我们可以创建它并且读取它，跟文件一样打开就好.
+```
+    struct input_event event;
+    int screenInput = open("/dev/event0", O_RDONLY);//触摸屏不知道写入能干嘛唉，还是只读吧
+    //bzero(&event, sizeof(event));置零函数，已经老了
+    memset(&event, 0, sizeof(event));
+```  
+[关于为什么推荐用memset不用bzero可以看这里](https://blog.csdn.net/weixin_42235488/article/details/80589583)
+_于是在这里就可以读取这个event了！_
+```
+rc = read(screen, &event, sizeof(event))
+```
+_于是自然而然的我们就可以读取在上面的坐标了，就像这样,根据上面2,1.2定义的__u16type来判断_
+```
+        switch (event.type)
+        {
+        case EV_SYN://同步事件synchronous
+            printf("----");
+            break;
+        case EV_ABS:
+            printf("time：%u.%u\ttype:EV_ABS\t \n", event.time.tv_sec, event.time.tv_usec);
+            switch (event.code)
+            {
+            case ABS_X://绝对坐标 X
+                printf("X:%u\n", event.value);
+                x = event.value;
+                break;
+
+            case ABS_Y://绝对坐标Y
+                printf("Y:%u\n", event.value);
+                y = event.value;
+                break;
+            case ABS_PRESSURE://压力检测
+                printf("pressure:%u\n", event.value);
+            }
+        case EV_KEY: //按键摊弹开
+            if (event.value == 1)//如果有落下
+            {
+               
+            }
+            else (event.value==0)//如果有抬起{
+            }
+        }
+```
+
+
