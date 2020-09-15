@@ -262,23 +262,14 @@ int main( int argc, char *argv[] )
         EV_FF_STATUS    状态
         */
  ```
- __code：
-事件的代码.
-如果事件的类型代码是EV_KEY,该代码code为设备键盘代码.
-代码植0~127为键盘上的按键代码,0x110~0x116 为鼠标上按键代码,
-其中0x110(BTN_ LEFT)为鼠标左键,
-0x111(BTN_RIGHT)为鼠标右键,
-0x112(BTN_ MIDDLE)为鼠标中键.
-其它代码含义请参看include/linux/input.h文件. 
-如果事件的类型代码是EV_REL,code值表示轨迹的类型.
-如指示鼠标的X轴方向REL_X(代码为0x00),
-指示鼠标的Y轴方向REL_Y(代码 为0x01),
-指示鼠标中轮子方向REL_WHEEL(代码为0x08).__
 
-__type: 
-EV_KEY,键盘
-EV_REL,相对坐标
-EV_ABS,绝对坐标 __
+__事件的代码.__
+> 如果事件的类型代码是EV_KEY,该代码code为设备键盘代码.  
+代码植0~127为键盘上的按键代码,0x110~0x116 为鼠标上按键代码,其中0x110(BTN_ LEFT)为鼠标左键,0x111(BTN_RIGHT)为鼠标右键,0x112(BTN_ MIDDLE)为鼠标中键.其它代码含义请参看include/linux/input.h文件. 如果事件的类型代码是EV_REL,code值表示轨迹的类型.如指示鼠标的X轴方向REL_X(代码为0x00),指示鼠标的Y轴方向REL_Y(代码 为0x01),指示鼠标中轮子方向REL_WHEEL(代码为0x08)
+__type: EV_KEY,  
+键盘EV_REL,  
+相对坐标EV_ABS,  
+绝对坐标 __
   
  #### 2,1.1 常用头文件
  ```
