@@ -18,7 +18,7 @@ __电子181余杰聪__
 
 ## Content
 
-## 第一周
+## 1,第一周
 ### 0.写在前头的一些心得
 ```
 #include<math.h>//在arm-linux-gcc时要加上-lm参数才能通过
@@ -26,10 +26,10 @@ __电子181余杰聪__
 
 插入优盘后来到/mnt/udisk查看数据，若没有，需要mount挂载但我暂时不知道怎么解决这个问题。
 ```
-### 1.学习使用文件操作写入屏幕(screen.c)
- * /dev/fb0是屏幕文件，可以写入数据操控显示
- * 一个像素是由ARGB格式组成，所以要写入32个字节，在最后write时记得WIDTH×HEIGHT×4
- * 常用头文件以及函数原型
+### 1,0.学习使用文件操作写入屏幕(screen.c)
+ #### 1,0.1 /dev/fb0是屏幕文件，可以写入数据操控显示
+ #### 1,0.2 一个像素是由ARGB格式组成，所以要写入32个字节，在最后write时记得WIDTH×HEIGHT×4
+ #### 1,0.3 常用头文件以及函数原型
  ```
   #include<fcntl.h>//open
   #include<unistd.h>// write lseek read close
@@ -58,8 +58,9 @@ __电子181余杰聪__
   int munmap(void* start,size_t length);
   
  ```
- * _mmap比较复杂，下面是一些补充_
-  start：映射区的开始地址，设置为0时表示由系统决定映射区的起始地址。
+#### 1,0.4 _mmap比较复杂，下面是一些补充_
+  start：映射区的开始地址，设置为0时表示由系统决定映射区的起始地址。  
+  
   length：映射区的长度。//长度单位是 以字节为单位，不足一内存页按一内存页处理
   
   mmap的prot(期望的内存保护标志)常用的宏
@@ -68,7 +69,8 @@ __电子181余杰聪__
   PROT_WRITE //页可以被写入
   ```
   
-  flags：指定映射对象的类型，映射选项和映射页是否可以共享。它的值可以是一个或者多个以下位的组合体
+  flags：指定映射对象的类型，映射选项和映射页是否可以共享。它的值可以是一个或者多个以下位的组合体  
+  
   ```
   MAP_SHARED //与其它所有映射这个对象的进程共享映射空间。对共享区的写入，相当于输出到文件。直到msync()或者munmap()被调用，文件实际上不会被更新。
   ```
@@ -77,10 +79,10 @@ __电子181余杰聪__
  
  > _[总而言之，常规文件操作需要从磁盘到页缓存再到用户主存的两次数据拷贝。而mmap操控文件，只需要从磁盘到用户主存的一次数据拷贝过程。说白了，mmap的关键点是实现了用户空间和内核空间的数据直接交互而省去了空间不同数据不通的繁琐过程。因此mmap效率更高](https://blog.csdn.net/qq_33611327/article/details/81738195)_
  
-### 2.读取bmp图片(showbmp.c)
- * __只能读取<800*480分辨率的图片，否则就会出现segmentation fault！！因为是数组越界了__
+### 1,1. 读取bmp图片(showbmp.c)
+__只能读取<800*480分辨率的图片，否则就会出现segmentation fault！！因为是数组越界了__  
  
- [1.bmp简单的介绍](https://blog.csdn.net/nicholas_duan/article/details/90717599)
+ #### [1,1.0bmp简单的介绍](https://blog.csdn.net/nicholas_duan/article/details/90717599)
 ![img](week1/day3/aHR0cHM6Ly9pbWFnZXMuY25ibG9ncy5jb20vY25ibG9nc19jb20vamFzb25feWFvL2JtcF8zLnBuZw.png)
 
 __图文件从文件头开始偏移54个字节就是位图数据了__
@@ -109,7 +111,7 @@ char bmpPixels[WIDTH*HEIGHT*3];
 //读取bmp像素数据
 read(bmpfd,bmpPixels,sizeof(bmpPixels));
 ```
-* 2.bmp格式转换
+#### 1,1.2 bmp格式转换
 _bmp中一个像素是元祖(B,G,R)组成的,而开发板的像素是由(A,R,G,B)组成的，这里有一种算法能够转换_
 _由于R,G,B,A都是1字节数据，我们用char类型接收它，后来再用int类型转换到4字节_
 ```
@@ -135,14 +137,15 @@ _这里比较复杂，但其实不难理解，利用了一些位操作和左移�
                 }
         };
 ```
-* 3.end
-__最后别忘记关掉文件释放内存哦__
+### 1,1.3 文件关闭(close,munmap)
+## 最后别忘记关掉文件释放内存哦
 ```
         close(screen);
         close(bmpfd);
         munmap(screenMap,HEIGHT*WIDTH*4);
 ```
-* 4.动图bmp实现(gif.c)__(补充)__
+
+### 1,1.4 动图bmp实现(gif.c)__(补充)__
 _这也是挺简单的思路，将show_bmp封装成一个函数，再传入path即可_
 _不过bmp占的内存太大了，800*480就要1M左右，实现一个gif要70M就离谱_
 ![img](week1/day3/TIM截图20200913230306.png)  
@@ -196,11 +199,27 @@ __[C语言里整数转字符串比较麻烦，自己写的话估计就要好久�
         }
     }
 ```
-## 第二周
-### 0.线程调用
-pass
-### 1.学习操控触摸板(input.c)(待定)
- * 输入设备事件类型常用宏
+## 2,第二周
+### 2,0.线程调用
+[以下内容剽窃自这个网址哈哈](https://blog.csdn.net/networkhunter/article/details/100218945)
+#### 2,0.1 常用头文件
+```
+＃include <pthread.h> 
+```
+> 当然，进包含一个头文件是不能搞定线程的，还需要连接libpthread.so这个库，因此在程序链接阶段应该有类似 -pthread 见(1,0)
+
+> 在Linux下创建的线程的API接口是pthread_create()，它的完整定义是：
+
+```int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void*), void *arg); ```
+> 函数参数：
+* 1. 线程句柄 thread：当一个新的线程调用成功之后，就会通过这个参数将线程的句柄返回给调用者，以便对这个线程进行管理。 
+* 2. 入口函数 start_routine()： 当你的程序调用了这个接口之后，就会产生一个线程，而这个线程的入口函数就是start_routine()。如果线程创建成功，这个接口会返回0。 
+* 3. 入口函数参数 *arg : start_routine()函数有一个参数，这个参数就是pthread_create的最后一个参数arg。这种设计可以在线程创建之前就帮它准备好一些专有数据，最典型的用法就是使用C++编程时的this指针。start_routine()有一个返回值，这个返回值可以通过pthread_join()接口获得。 
+* 4. 线程属性 attr： pthread_create()接口的第二个参数用于设置线程的属性。这个参数是可选的，当不需要修改线程的默认属性时，给它传递NULL就行。具体线程有那些属性，我们后面再做介绍。
+
+
+### 2,1.学习操控触摸板(input.c)(待定)
+#### 2.1.0 输入设备事件类型常用宏
  ```
          /*
         EV_SYN 0x00     同步事件
