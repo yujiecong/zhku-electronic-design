@@ -111,7 +111,7 @@ char bmpPixels[WIDTH*HEIGHT*3];
 //读取bmp像素数据
 read(bmpfd,bmpPixels,sizeof(bmpPixels));
 ```
-#### 1,1.2 bmp格式转换
+#### 1,1.1 bmp格式转换
 _bmp中一个像素是元祖(B,G,R)组成的,而开发板的像素是由(A,R,G,B)组成的，这里有一种算法能够转换_
 _由于R,G,B,A都是1字节数据，我们用char类型接收它，后来再用int类型转换到4字节_
 ```
@@ -137,7 +137,7 @@ _这里比较复杂，但其实不难理解，利用了一些位操作和左移�
                 }
         };
 ```
-### 1,1.3 文件关闭(close,munmap)
+### 1,1.2 文件关闭(close,munmap)
 ## 最后别忘记关掉文件释放内存哦
 ```
         close(screen);
@@ -145,7 +145,7 @@ _这里比较复杂，但其实不难理解，利用了一些位操作和左移�
         munmap(screenMap,HEIGHT*WIDTH*4);
 ```
 
-### 1,1.4 动图bmp实现(gif.c)__(补充)__
+### 1,1.3 动图bmp实现(gif.c)__(补充)__
 _这也是挺简单的思路，将show_bmp封装成一个函数，再传入path即可_
 _不过bmp占的内存太大了，800*480就要1M左右，实现一个gif要70M就离谱_
 ![img](week1/day3/TIM截图20200913230306.png)  
