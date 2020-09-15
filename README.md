@@ -121,7 +121,7 @@ _声明bmp像素数据数组，以及我们对应的屏幕像素数组_
 ```
 //屏幕像素信息
 int screenPixels[bmpHeight][bmpWidth];
-//只能读取480*800的bmp图片！
+//只能读取小于480*800的bmp图片！
 char bmpPixels[WIDTH*HEIGHT*3];
 //读取bmp像素数据
 read(bmpfd,bmpPixels,sizeof(bmpPixels));
@@ -162,11 +162,11 @@ __最后别忘记关掉文件释放内存哦__
 * 4.动图bmp实现(gif.c)__(补充)__
 _这也是挺简单的思路，将show_bmp封装成一个函数，再传入path即可_
 _不过bmp占的内存太大了，800*480就要1M左右，实现一个gif要70M就离谱_
-![img](week1/day3/TIM截图20200913230306.png)
-***
+![img](week1/day3/TIM截图20200913230306.png)  
+
 __动图是这样的__
-![img](week1/day3/7-1Z520115453.gif)
-***
+![img](week1/day3/7-1Z520115453.gif)  
+
 __[C语言里整数转字符串比较麻烦，自己写的话估计就要好久，所以百度哈哈，这是一个不难也不简单的算法](https://blog.csdn.net/nanfeibuyi/article/details/80811498)__
 ```
 char* Int2String(int num,char *str)//10进制 
@@ -233,3 +233,4 @@ char* Int2String(int num,char *str)//10进制
         }
     }
 ```
+__这里可以考虑用强制转换,待定__
